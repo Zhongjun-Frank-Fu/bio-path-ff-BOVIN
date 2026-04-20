@@ -26,8 +26,8 @@ That's the "can we walk?" demo. Aim 2 swaps the surrogate label for IMvigor210; 
 ### 1. Local (fastest, CPU)
 
 ```bash
-git clone <this-repo>
-cd bovin-pathway-demo
+git clone git@github.com:Zhongjun-Frank-Fu/bio-path-ff-BOVIN.git
+cd bio-path-ff-BOVIN
 make install           # pip install -e ".[dev]" + pre-commit
 make smoke             # python -c "import bovin_demo; print(bovin_demo.__version__)"
 make test              # pytest -v
@@ -49,22 +49,23 @@ Apple Silicon users: the Makefile defaults to `--platform=linux/amd64`.
 ## Repo layout
 
 ```
-bovin-pathway-demo/
-├── bovin_demo/              主代码包
+bio-path-ff-BOVIN/
+├── bovin_demo/              主代码包 (Python 包名保留 bovin_demo)
 │   ├── graph/               Pathway graph loader → HeteroData (M1)
-│   ├── data/                TCGA loader + HGNC mapping + split (M2)
+│   ├── data/                TCGA loader + HGNC mapping + label + split + dataset (M2)
 │   ├── model/               HeteroGNN + module attention + baseline MLP (M3)
-│   ├── train/               Lightning module + training loop (M4)
-│   ├── xai/                 Captum IG + heatmap viz (M5)
-│   ├── eval/                Metrics + report generation (M6)
-│   └── cli.py               bovin-demo entry point
-├── configs/                 Hydra-style YAML (default + tcga_coad)
-├── tests/                   pytest (M0 smoke + M1 placeholders)
-├── data/                    raw/processed gitignored; DATACARD + checksums tracked
-├── notebooks/               01_demo_walkthrough (M6)
-├── outputs/                 per-run outputs/YYYYMMDD_HHMMSS/ (gitignored)
-├── Dockerfile
-├── Makefile
+│   ├── train/               LitBovinModule + run_training + 3-seed sweep (M4)
+│   ├── xai/                 Captum IG + aggregate + heatmap viz (M5)
+│   ├── eval/                bootstrap metrics + report.md + LUAD zero-shot (M6)
+│   └── cli.py               bovin-demo 入口 (sanity/train/xai/eval)
+├── configs/                 OmegaConf YAML (default + tcga_coad)
+├── tests/                   pytest · 61 passed, 1 skipped
+├── data/                    DATACARD + checksums.txt 跟踪;  raw/ 不跟踪
+├── docs/                    demo_card.md + RELEASE_NOTES_v0.1-demo.md
+├── tools/                   download_tcga_coad/luad.sh + parse_graph_v0 + walkthrough
+├── outputs/                 每次 run 一个时间戳目录 (gitignored)
+├── Dockerfile               torch 2.3.1 CPU + PyG 2.5.3 + setuptools<70
+├── Makefile                 make train / xai / eval / eval-luad
 ├── pyproject.toml
 └── .github/workflows/ci.yml
 ```

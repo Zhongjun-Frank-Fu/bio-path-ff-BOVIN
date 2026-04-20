@@ -54,7 +54,9 @@ dev = [
 bovin-demo = "bovin_demo.cli:main"
 
 [project.urls]
-Repository = "https://github.com/<TODO>/bovin-pathway-demo"
+Repository = "https://github.com/Zhongjun-Frank-Fu/bio-path-ff-BOVIN"
+Issues = "https://github.com/Zhongjun-Frank-Fu/bio-path-ff-BOVIN/issues"
+Releases = "https://github.com/Zhongjun-Frank-Fu/bio-path-ff-BOVIN/releases"
 
 # ============== setuptools ==============
 [tool.setuptools]

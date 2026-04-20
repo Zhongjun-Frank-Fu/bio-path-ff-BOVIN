@@ -73,7 +73,8 @@ disk; that file is outside the Docker image mount in the test environment.
 ## Reproducibility recipe
 
 ```bash
-git clone <repo> && cd bovin-pathway-demo
+git clone git@github.com:Zhongjun-Frank-Fu/bio-path-ff-BOVIN.git
+cd bio-path-ff-BOVIN
 git checkout v0.1-demo
 make docker-build         # torch 2.3.1 CPU + PyG 2.5.3 + setuptools<70
 make docker-shell         # drops you into /app

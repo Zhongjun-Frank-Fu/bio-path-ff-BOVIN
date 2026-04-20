@@ -58,8 +58,8 @@ purpose: "paste-ready figure + caption + DoD summary for BOVIN-AI-Research-Plan 
 ## How to reproduce from zero
 
 ```bash
-git clone <this-repo>
-cd bovin-pathway-demo
+git clone git@github.com:Zhongjun-Frank-Fu/bio-path-ff-BOVIN.git
+cd bio-path-ff-BOVIN
 make docker-build
 make docker-shell                       # drops you into /app
 # inside the container:
