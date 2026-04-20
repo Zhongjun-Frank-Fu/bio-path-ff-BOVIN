@@ -1,0 +1,56 @@
+# ============================================================================
+# BOVIN-Pathway Demo · default config
+# 覆盖方式：python -m bovin_demo.cli train --config configs/tcga_coad.yaml
+# 或 hydra-style：++train.lr=1e-3
+# ============================================================================
+
+seed: 42
+
+paths:
+  repo_root: .
+  graph_json: bovin_pathway_v0.json   # 由 M1 T1.1 生成
+  raw_dir: data/raw
+  processed_dir: data/processed
+  output_root: outputs
+
+data:
+  source: tcga_coad_xena
+  split:
+    train: 0.6
+    val: 0.2
+    test: 0.2
+    stratify: label
+
+graph:
+  source: bovin_pathway_v0.json
+  filter_unobservable: false          # therapy-context 节点保留作上下文
+  add_self_loops: true
+
+model:
+  name: hetero_gnn
+  hidden_dim: 64
+  num_intra_layers: 2
+  num_inter_layers: 1
+  dropout: 0.25
+  attention_heads: 4
+  pool: module_attention
+
+train:
+  optimizer: adamw
+  lr: 2.0e-3
+  weight_decay: 1.0e-4
+  batch_size: 32
+  max_epochs: 80
+  patience: 15
+  scheduler: cosine
+  loss: bce_with_logits
+  class_weight: balanced
+
+xai:
+  method: integrated_gradients
+  baseline: zero
+  n_samples: 20
+
+eval:
+  metrics: [auc, accuracy, f1, brier, ece]
+  bootstrap: 500

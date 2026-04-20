@@ -1,0 +1,29 @@
+# TCGA-COAD config — 继承 default.yaml，只覆盖 COAD 特有字段
+# 使用：python -m bovin_demo.cli train --config configs/tcga_coad.yaml
+
+defaults:
+  - default
+
+data:
+  source: tcga_coad_xena
+  xena:
+    expr_file: TCGA.COAD.sampleMap_HiSeqV2
+    clinical_file: TCGA.COAD.sampleMap_COAD_clinicalMatrix
+    # UCSC Xena static tsv；下载后放 data/raw/
+    url_hint: "https://xenabrowser.net/datapages/?cohort=TCGA%20Colon%20Cancer"
+
+label:
+  # 代理 ICD-readiness label（PLAN §3.2）—— Aim 2 会切到 IMvigor210 真响应 label
+  kind: surrogate
+  formula:
+    positives: [CALR, HMGB1, HSPA1A, HSP90AA1]
+    negatives: [CD47, CD24]
+    aggregator: zscore_sum
+    threshold: median
+  rationale: >
+    Peng Fig.1E-F 在 TCGA-COAD 报过 CRT-生存关联；
+    demo 的目的是证明架构走得通，不是压 SOTA。
+
+train:
+  max_epochs: 80
+  lr: 2.0e-3

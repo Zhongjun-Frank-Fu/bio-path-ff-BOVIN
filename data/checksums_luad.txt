@@ -1,0 +1,6 @@
+# MD5 checksums for raw TCGA-LUAD tsv (M6 · T6.4)
+# generated: 2026-04-20T20:48:12Z
+bcff7dfabf3da82ce215bd2649c4dd4a  HiSeqV2.gz
+5b2ccac63dc0d58d8cc5aac5eaa654d4  HiSeqV2
+78fa8a7c22a70f6d404f3d6ac6513a4a  LUAD_clinicalMatrix
+fbcc4466d5284f9ebae0f3960d00b551  LUAD_survival.txt

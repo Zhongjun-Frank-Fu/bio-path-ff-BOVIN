@@ -1,0 +1,82 @@
+# ================ Python ================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.hypothesis/
+htmlcov/
+
+# ================ Virtual envs ================
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ================ IDE ================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ================ Jupyter ================
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# ================ BOVIN-Demo-specific ================
+# 数据原始 & 处理产物不进 git；用 DVC / 校验和管理
+data/raw/*
+!data/raw/.gitkeep
+data/raw_luad/
+data/raw_*/
+data/processed/*
+!data/processed/.gitkeep
+
+# pytest tmp dirs that sometimes leak into the repo root
+pytest-cache-files-*/
+
+# 训练 / 评估产物
+outputs/*
+!outputs/.gitkeep
+mlruns/
+lightning_logs/
+wandb/
+*.ckpt
+*.pth
+*.pt
+
+# 临时 XAI 图
+*.npz
+tmp/
+scratch/
+
+# ================ Secrets ================
+*.env.local
+.secrets

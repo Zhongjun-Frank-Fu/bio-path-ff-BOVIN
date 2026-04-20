@@ -1,0 +1,1764 @@
+{
+  "version": "v0.1",
+  "modules": [
+    {
+      "id": "M1",
+      "name": "ENTRY"
+    },
+    {
+      "id": "M2",
+      "name": "ISR"
+    },
+    {
+      "id": "M3",
+      "name": "MITO"
+    },
+    {
+      "id": "M4",
+      "name": "DAMP"
+    },
+    {
+      "id": "M5",
+      "name": "METAB"
+    },
+    {
+      "id": "M6",
+      "name": "APC_RECV"
+    },
+    {
+      "id": "M7",
+      "name": "DC_MAT"
+    },
+    {
+      "id": "M8",
+      "name": "TCELL"
+    },
+    {
+      "id": "M9",
+      "name": "ICB"
+    },
+    {
+      "id": "M10",
+      "name": "MEM"
+    },
+    {
+      "id": "M11",
+      "name": "MAC"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ha",
+      "symbol": "HA",
+      "name": "Hemagglutinin (WSN surface glycoprotein)",
+      "type": "viral",
+      "side": "therapy",
+      "observable": false,
+      "module": "M1",
+      "refs": "UniProt P03454; Peng Fig.1A, Fig.2G"
+    },
+    {
+      "id": "wsn",
+      "symbol": "WSN",
+      "name": "A/WSN/1933 influenza virus particle",
+      "type": "viral",
+      "side": "therapy",
+      "observable": false,
+      "module": "M1",
+      "refs": "Peng Methods \"Animals, cell lines and virus strain\""
+    },
+    {
+      "id": "sia26gal",
+      "symbol": "Siaα2,6-Gal",
+      "name": "α2,6-linked sialic acid–galactose",
+      "type": "metabolite",
+      "side": "host",
+      "observable": false,
+      "module": "M1",
+      "refs": "Peng Fig.2H; ref 47 (Eisen 1997)"
+    },
+    {
+      "id": "st6gal1",
+      "symbol": "ST6GAL1",
+      "name": "β-galactoside α-2,6-sialyltransferase 1",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M1",
+      "refs": "HGNC:11372; Peng Fig.S5, siRNA KD"
+    },
+    {
+      "id": "mgat5",
+      "symbol": "MGAT5",
+      "name": "N-acetylglucosaminyltransferase V",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M1",
+      "refs": "ref 45 (Gray 2020); KEGG hsa00512"
+    },
+    {
+      "id": "cmas",
+      "symbol": "CMAS",
+      "name": "Cytidine monophosphate N-acetylneuraminic acid synthetase",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M1",
+      "refs": "HGNC:24321; sialic acid biosynthesis support"
+    },
+    {
+      "id": "m2_ion",
+      "symbol": "M2",
+      "name": "Influenza matrix protein 2 (proton channel)",
+      "type": "viral",
+      "side": "therapy",
+      "observable": false,
+      "module": "M2",
+      "refs": "Peng intro ref 30 (Yang 2019)"
+    },
+    {
+      "id": "pb1f2",
+      "symbol": "PB1-F2",
+      "name": "Influenza PB1-F2",
+      "type": "viral",
+      "side": "therapy",
+      "observable": false,
+      "module": "M2",
+      "refs": "ref 54 (Wang 2021 autophagy via mitophagy)"
+    },
+    {
+      "id": "mavs",
+      "symbol": "MAVS",
+      "name": "Mitochondrial antiviral signaling",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M2",
+      "refs": "HGNC:29233; Peng ref 30"
+    },
+    {
+      "id": "eif2ak2",
+      "symbol": "EIF2AK2",
+      "name": "PKR (dsRNA-activated protein kinase)",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M2",
+      "refs": "HGNC:9437; Peng Discussion on PKR"
+    },
+    {
+      "id": "eif2a",
+      "symbol": "EIF2S1",
+      "name": "eIF2α",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M2",
+      "refs": "Peng Fig.3F (P-eIF2α WB)"
+    },
+    {
+      "id": "atf4",
+      "symbol": "ATF4",
+      "name": "Activating transcription factor 4",
+      "type": "TF",
+      "side": "host",
+      "observable": true,
+      "module": "M2",
+      "refs": "Reactome R-HSA-381042 (ISR)"
+    },
+    {
+      "id": "ddit3",
+      "symbol": "DDIT3",
+      "name": "CHOP",
+      "type": "TF",
+      "side": "host",
+      "observable": true,
+      "module": "M2",
+      "refs": "Reactome R-HSA-381119"
+    },
+    {
+      "id": "eif2ak3",
+      "symbol": "EIF2AK3",
+      "name": "PERK (UPR branch)",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M2",
+      "refs": "Reactome R-HSA-381119"
+    },
+    {
+      "id": "atf6",
+      "symbol": "ATF6",
+      "name": "ATF6 (UPR branch)",
+      "type": "TF",
+      "side": "host",
+      "observable": true,
+      "module": "M2",
+      "refs": "Reactome R-HSA-381183"
+    },
+    {
+      "id": "xbp1",
+      "symbol": "XBP1",
+      "name": "XBP1 (UPR branch)",
+      "type": "TF",
+      "side": "host",
+      "observable": true,
+      "module": "M2",
+      "refs": "Reactome R-HSA-381070"
+    },
+    {
+      "id": "ros",
+      "symbol": "ROS",
+      "name": "Reactive oxygen species (intracellular)",
+      "type": "metabolite",
+      "side": "host",
+      "observable": false,
+      "module": "M3",
+      "refs": "Peng Fig.3B (DCFH-DA)"
+    },
+    {
+      "id": "cycs",
+      "symbol": "CYCS",
+      "name": "Cytochrome c",
+      "type": "death_reg",
+      "side": "host",
+      "observable": true,
+      "module": "M3",
+      "refs": "HGNC:2577; apoptosome assembly"
+    },
+    {
+      "id": "casp9",
+      "symbol": "CASP9",
+      "name": "Caspase-9",
+      "type": "death_reg",
+      "side": "host",
+      "observable": true,
+      "module": "M3",
+      "refs": "Peng Fig.S14 \"Cleaved caspase 9\""
+    },
+    {
+      "id": "casp3",
+      "symbol": "CASP3",
+      "name": "Caspase-3",
+      "type": "death_reg",
+      "side": "host",
+      "observable": true,
+      "module": "M3",
+      "refs": "Peng Discussion; Fig.S14"
+    },
+    {
+      "id": "bcl2",
+      "symbol": "BCL2",
+      "name": "B-cell lymphoma 2 (anti-apoptotic)",
+      "type": "death_reg",
+      "side": "host",
+      "observable": true,
+      "module": "M3",
+      "refs": "Peng Discussion (Bcl2 decreased)"
+    },
+    {
+      "id": "bax",
+      "symbol": "BAX",
+      "name": "Bcl-2-associated X protein",
+      "type": "death_reg",
+      "side": "host",
+      "observable": true,
+      "module": "M3",
+      "refs": "KEGG hsa04210"
+    },
+    {
+      "id": "tfam",
+      "symbol": "TFAM",
+      "name": "Mitochondrial transcription factor A",
+      "type": "TF",
+      "side": "host",
+      "observable": true,
+      "module": "M3",
+      "refs": "HGNC:11741; mito biogenesis context"
+    },
+    {
+      "id": "drp1",
+      "symbol": "DNM1L",
+      "name": "DRP1 (mito fission)",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M3",
+      "refs": "Peng Fig.3G (mito fragmentation)"
+    },
+    {
+      "id": "crt",
+      "symbol": "CALR",
+      "name": "Calreticulin (CRT)",
+      "type": "DAMP",
+      "side": "host",
+      "observable": true,
+      "module": "M4",
+      "refs": "Peng Fig.1C–F, Fig.3H, Fig.4H; ref 31 (Obeid 2007), ref 32 (Chen 2023)"
+    },
+    {
+      "id": "hmgb1",
+      "symbol": "HMGB1",
+      "name": "High-mobility group box 1",
+      "type": "DAMP",
+      "side": "host",
+      "observable": true,
+      "module": "M4",
+      "refs": "Peng Fig.3I, Fig.4I; ref 37 (Bald 2014)"
+    },
+    {
+      "id": "atp_ex",
+      "symbol": "ATP (extracellular)",
+      "name": "ATP as \"find me\" signal",
+      "type": "metabolite",
+      "side": "host",
+      "observable": false,
+      "module": "M4",
+      "refs": "Peng Fig.3E; ref 38 (Borges da Silva 2018)"
+    },
+    {
+      "id": "anxa1",
+      "symbol": "ANXA1",
+      "name": "Annexin A1 (DAMP)",
+      "type": "DAMP",
+      "side": "host",
+      "observable": true,
+      "module": "M4",
+      "refs": "Galluzzi 2020 ICD consensus"
+    },
+    {
+      "id": "hsp70",
+      "symbol": "HSPA1A",
+      "name": "Heat shock protein 70",
+      "type": "DAMP",
+      "side": "host",
+      "observable": true,
+      "module": "M4",
+      "refs": "Krysko 2012"
+    },
+    {
+      "id": "hsp90",
+      "symbol": "HSP90AA1",
+      "name": "Heat shock protein 90α",
+      "type": "DAMP",
+      "side": "host",
+      "observable": true,
+      "module": "M4",
+      "refs": "Krysko 2012"
+    },
+    {
+      "id": "type1_ifn",
+      "symbol": "IFNA/IFNB",
+      "name": "Type-I interferons (aggregated)",
+      "type": "cytokine",
+      "side": "host",
+      "observable": true,
+      "module": "M4",
+      "refs": "Galluzzi 2020 (ICD hallmark)"
+    },
+    {
+      "id": "lod",
+      "symbol": "LOD",
+      "name": "Lactate oxidase (synthetic enzyme)",
+      "type": "synthetic",
+      "side": "therapy",
+      "observable": false,
+      "module": "M5",
+      "refs": "Peng Fig.2A,D; Methods"
+    },
+    {
+      "id": "lactate",
+      "symbol": "Lactate",
+      "name": "L-Lactate (TME-accumulated)",
+      "type": "metabolite",
+      "side": "host",
+      "observable": false,
+      "module": "M5",
+      "refs": "Peng Discussion \"weakly acidic TME\""
+    },
+    {
+      "id": "h2o2",
+      "symbol": "H2O2",
+      "name": "Hydrogen peroxide (LOD product)",
+      "type": "metabolite",
+      "side": "host",
+      "observable": false,
+      "module": "M5",
+      "refs": "Peng intro; Fig.3B"
+    },
+    {
+      "id": "ldha",
+      "symbol": "LDHA",
+      "name": "Lactate dehydrogenase A",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M5",
+      "refs": "HGNC:6535; Warburg effect"
+    },
+    {
+      "id": "ldhb",
+      "symbol": "LDHB",
+      "name": "Lactate dehydrogenase B",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M5",
+      "refs": "HGNC:6541"
+    },
+    {
+      "id": "slc16a1",
+      "symbol": "SLC16A1",
+      "name": "MCT1 (lactate transporter)",
+      "type": "receptor",
+      "side": "host",
+      "observable": true,
+      "module": "M5",
+      "refs": "HGNC:10922"
+    },
+    {
+      "id": "slc16a3",
+      "symbol": "SLC16A3",
+      "name": "MCT4 (lactate transporter)",
+      "type": "receptor",
+      "side": "host",
+      "observable": true,
+      "module": "M5",
+      "refs": "HGNC:10924"
+    },
+    {
+      "id": "hif1a",
+      "symbol": "HIF1A",
+      "name": "Hypoxia-inducible factor 1α",
+      "type": "TF",
+      "side": "host",
+      "observable": true,
+      "module": "M5",
+      "refs": "HGNC:4910; Reactome R-HSA-1234174"
+    },
+    {
+      "id": "vegfa",
+      "symbol": "VEGFA",
+      "name": "Vascular endothelial growth factor A",
+      "type": "cytokine",
+      "side": "host",
+      "observable": true,
+      "module": "M5",
+      "refs": "HGNC:12680; HIF1A target"
+    },
+    {
+      "id": "caco3",
+      "symbol": "CaCO₃",
+      "name": "Calcium carbonate biomineralization shell",
+      "type": "carrier",
+      "side": "therapy",
+      "observable": false,
+      "module": "M5",
+      "refs": "Peng Fig.2B; ref 43 (Gilbert 2022)"
+    },
+    {
+      "id": "nfe2l2",
+      "symbol": "NFE2L2",
+      "name": "NRF2 (oxidative stress TF)",
+      "type": "TF",
+      "side": "host",
+      "observable": true,
+      "module": "M5",
+      "refs": "HGNC:7782"
+    },
+    {
+      "id": "cd91",
+      "symbol": "LRP1",
+      "name": "Low-density lipoprotein receptor-related 1 (CD91)",
+      "type": "receptor",
+      "side": "host",
+      "observable": true,
+      "module": "M6",
+      "refs": "HGNC:6692; Peng intro; ref 36 (Gardai 2003)"
+    },
+    {
+      "id": "tlr4",
+      "symbol": "TLR4",
+      "name": "Toll-like receptor 4",
+      "type": "receptor",
+      "side": "host",
+      "observable": true,
+      "module": "M6",
+      "refs": "HGNC:11850; HMGB1 receptor"
+    },
+    {
+      "id": "p2rx7",
+      "symbol": "P2RX7",
+      "name": "P2X purinoceptor 7",
+      "type": "receptor",
+      "side": "host",
+      "observable": true,
+      "module": "M6",
+      "refs": "HGNC:8537; ATP receptor; ref 38"
+    },
+    {
+      "id": "ager",
+      "symbol": "AGER",
+      "name": "RAGE (alt. HMGB1 receptor)",
+      "type": "receptor",
+      "side": "host",
+      "observable": true,
+      "module": "M6",
+      "refs": "HGNC:320"
+    },
+    {
+      "id": "nlrp3",
+      "symbol": "NLRP3",
+      "name": "NLR family pyrin domain containing 3",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M6",
+      "refs": "Peng Discussion (NLRP3 inflammasome)"
+    },
+    {
+      "id": "casp1",
+      "symbol": "CASP1",
+      "name": "Caspase-1 (inflammasome)",
+      "type": "death_reg",
+      "side": "host",
+      "observable": true,
+      "module": "M6",
+      "refs": "KEGG hsa04621"
+    },
+    {
+      "id": "il1b",
+      "symbol": "IL1B",
+      "name": "Interleukin-1β",
+      "type": "cytokine",
+      "side": "host",
+      "observable": true,
+      "module": "M6",
+      "refs": "Peng Discussion (IL-1β release)"
+    },
+    {
+      "id": "cd47",
+      "symbol": "CD47",
+      "name": "Integrin-associated protein (\"don't eat me\")",
+      "type": "receptor",
+      "side": "host",
+      "observable": true,
+      "module": "M6",
+      "refs": "Peng ref 7 (Weiskopf 2013 SIRPα); inhibitory link"
+    },
+    {
+      "id": "sirpa",
+      "symbol": "SIRPA",
+      "name": "Signal regulatory protein α",
+      "type": "receptor",
+      "side": "host",
+      "observable": true,
+      "module": "M6",
+      "refs": "ref 7; inhibitory"
+    },
+    {
+      "id": "cd80",
+      "symbol": "CD80",
+      "name": "Costimulatory B7-1",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M7",
+      "refs": "Peng Fig.S17 (CD80⁺ APCs↑)"
+    },
+    {
+      "id": "cd83",
+      "symbol": "CD83",
+      "name": "DC maturation marker",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M7",
+      "refs": "Peng Fig.S17"
+    },
+    {
+      "id": "cd86",
+      "symbol": "CD86",
+      "name": "Costimulatory B7-2",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M7",
+      "refs": "Peng Fig.5M"
+    },
+    {
+      "id": "cd11c",
+      "symbol": "ITGAX",
+      "name": "CD11c (DC marker)",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M7",
+      "refs": "HGNC:6152"
+    },
+    {
+      "id": "hla_a",
+      "symbol": "HLA-A",
+      "name": "MHC-I α-chain",
+      "type": "receptor",
+      "side": "host",
+      "observable": true,
+      "module": "M7",
+      "refs": "KEGG hsa04612"
+    },
+    {
+      "id": "hla_dr",
+      "symbol": "HLA-DRA",
+      "name": "MHC-II",
+      "type": "receptor",
+      "side": "host",
+      "observable": true,
+      "module": "M7",
+      "refs": "KEGG hsa04612"
+    },
+    {
+      "id": "ccr7",
+      "symbol": "CCR7",
+      "name": "C-C chemokine receptor 7 (LN homing)",
+      "type": "receptor",
+      "side": "host",
+      "observable": true,
+      "module": "M7",
+      "refs": "HGNC:1608"
+    },
+    {
+      "id": "il12",
+      "symbol": "IL12B",
+      "name": "IL-12 p40 (Th1 polarization)",
+      "type": "cytokine",
+      "side": "host",
+      "observable": true,
+      "module": "M7",
+      "refs": "Peng Fig.3A schematic"
+    },
+    {
+      "id": "cd8a",
+      "symbol": "CD8A",
+      "name": "Cytotoxic T cell marker",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M8",
+      "refs": "Peng Fig.1E,F (CRT vs CD8A correlation)"
+    },
+    {
+      "id": "cd3e",
+      "symbol": "CD3E",
+      "name": "T cell receptor complex",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M8",
+      "refs": "Peng Fig.1E"
+    },
+    {
+      "id": "cd4",
+      "symbol": "CD4",
+      "name": "Helper T cell marker",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M8",
+      "refs": "Peng Fig.5L"
+    },
+    {
+      "id": "ifng",
+      "symbol": "IFNG",
+      "name": "Interferon-γ",
+      "type": "cytokine",
+      "side": "host",
+      "observable": true,
+      "module": "M8",
+      "refs": "Peng Fig.4F, Fig.5E"
+    },
+    {
+      "id": "gzmb",
+      "symbol": "GZMB",
+      "name": "Granzyme B",
+      "type": "death_reg",
+      "side": "host",
+      "observable": true,
+      "module": "M8",
+      "refs": "HGNC:4709"
+    },
+    {
+      "id": "prf1",
+      "symbol": "PRF1",
+      "name": "Perforin-1",
+      "type": "death_reg",
+      "side": "host",
+      "observable": true,
+      "module": "M8",
+      "refs": "HGNC:9360"
+    },
+    {
+      "id": "trg_d",
+      "symbol": "TRG/TRD",
+      "name": "γδT cell receptor (aggregate)",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M8",
+      "refs": "Peng Fig.3A (γδT / IL-17)"
+    },
+    {
+      "id": "il17a",
+      "symbol": "IL17A",
+      "name": "Interleukin-17A",
+      "type": "cytokine",
+      "side": "host",
+      "observable": true,
+      "module": "M8",
+      "refs": "HGNC:5981"
+    },
+    {
+      "id": "tnf",
+      "symbol": "TNF",
+      "name": "Tumor necrosis factor α",
+      "type": "cytokine",
+      "side": "host",
+      "observable": true,
+      "module": "M8",
+      "refs": "Peng Fig.4G, Fig.5E"
+    },
+    {
+      "id": "il6",
+      "symbol": "IL6",
+      "name": "Interleukin-6",
+      "type": "cytokine",
+      "side": "host",
+      "observable": true,
+      "module": "M8",
+      "refs": "Peng Fig.4E, Fig.5E"
+    },
+    {
+      "id": "pd1",
+      "symbol": "PDCD1",
+      "name": "Programmed cell death-1",
+      "type": "checkpoint",
+      "side": "host",
+      "observable": true,
+      "module": "M9",
+      "refs": "Peng Fig.5 (anti-PD-1 combo)"
+    },
+    {
+      "id": "pdl1",
+      "symbol": "CD274",
+      "name": "PD-L1",
+      "type": "checkpoint",
+      "side": "host",
+      "observable": true,
+      "module": "M9",
+      "refs": "HGNC:17635; Elicit report (PD-L1 AUC baseline)"
+    },
+    {
+      "id": "ctla4",
+      "symbol": "CTLA4",
+      "name": "Cytotoxic T-lymphocyte-associated 4",
+      "type": "checkpoint",
+      "side": "host",
+      "observable": true,
+      "module": "M9",
+      "refs": "HGNC:2505"
+    },
+    {
+      "id": "apd1",
+      "symbol": "αPD-1",
+      "name": "Anti-PD-1 antibody (therapy input)",
+      "type": "synthetic",
+      "side": "therapy",
+      "observable": false,
+      "module": "M9",
+      "refs": "Peng Fig.5F–M"
+    },
+    {
+      "id": "cd24",
+      "symbol": "CD24",
+      "name": "(Tumor immune-evasion marker)",
+      "type": "checkpoint",
+      "side": "host",
+      "observable": true,
+      "module": "M9",
+      "refs": "ref 55 (Barkal 2019 Siglec-10)"
+    },
+    {
+      "id": "cd44",
+      "symbol": "CD44",
+      "name": "Memory T cell activation marker",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M10",
+      "refs": "Peng Fig.S21A-L"
+    },
+    {
+      "id": "sell",
+      "symbol": "SELL",
+      "name": "CD62L (central memory)",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M10",
+      "refs": "Peng Fig.S21"
+    },
+    {
+      "id": "tcf7",
+      "symbol": "TCF7",
+      "name": "TCF1 (stemness-like memory)",
+      "type": "TF",
+      "side": "host",
+      "observable": true,
+      "module": "M10",
+      "refs": "HGNC:11639"
+    },
+    {
+      "id": "foxp3",
+      "symbol": "FOXP3",
+      "name": "Treg master TF (down in BOVIN)",
+      "type": "TF",
+      "side": "host",
+      "observable": true,
+      "module": "M10",
+      "refs": "Peng Fig.5 (Treg↓)"
+    },
+    {
+      "id": "adgre1",
+      "symbol": "ADGRE1",
+      "name": "F4/80 (mouse macro marker)",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M11",
+      "refs": "Peng Fig.5J"
+    },
+    {
+      "id": "mrc1",
+      "symbol": "MRC1",
+      "name": "CD206 (M2 marker)",
+      "type": "marker",
+      "side": "host",
+      "observable": true,
+      "module": "M11",
+      "refs": "Peng Methods (anti-CD206 FC)"
+    },
+    {
+      "id": "nos2",
+      "symbol": "NOS2",
+      "name": "iNOS (M1 effector)",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M11",
+      "refs": "HGNC:7873"
+    },
+    {
+      "id": "arg1",
+      "symbol": "ARG1",
+      "name": "Arginase-1 (M2 effector)",
+      "type": "kinase",
+      "side": "host",
+      "observable": true,
+      "module": "M11",
+      "refs": "HGNC:663"
+    }
+  ],
+  "edges": [
+    {
+      "source": "wsn",
+      "relation": "presents",
+      "target": "ha",
+      "direction": "+",
+      "module_from": "M1",
+      "module_to": "M1",
+      "evidence": "Peng Fig.1A, Fig.2G"
+    },
+    {
+      "source": "st6gal1",
+      "relation": "produces",
+      "target": "sia26gal",
+      "direction": "+",
+      "module_from": "M1",
+      "module_to": "M1",
+      "evidence": "Peng Fig.S5 siRNA KD; HGNC"
+    },
+    {
+      "source": "mgat5",
+      "relation": "upregulates",
+      "target": "sia26gal",
+      "direction": "+",
+      "module_from": "M1",
+      "module_to": "M1",
+      "evidence": "ref 45 Gray 2020"
+    },
+    {
+      "source": "cmas",
+      "relation": "produces",
+      "target": "sia26gal",
+      "direction": "+",
+      "module_from": "M1",
+      "module_to": "M1",
+      "evidence": "KEGG hsa00512"
+    },
+    {
+      "source": "ha",
+      "relation": "binds",
+      "target": "sia26gal",
+      "direction": "+",
+      "module_from": "M1",
+      "module_to": "M1",
+      "evidence": "Peng Fig.2G (docking), Fig.2H"
+    },
+    {
+      "source": "sia26gal",
+      "relation": "recruits",
+      "target": "wsn",
+      "direction": "+",
+      "module_from": "M1",
+      "module_to": "M2",
+      "evidence": "Peng Fig.2H (tumor entry)"
+    },
+    {
+      "source": "caco3",
+      "relation": "carries",
+      "target": "wsn",
+      "direction": "+",
+      "module_from": "M1",
+      "module_to": "M1",
+      "evidence": "Peng Fig.2B"
+    },
+    {
+      "source": "caco3",
+      "relation": "consumes",
+      "target": "lactate",
+      "direction": "±",
+      "module_from": "M5",
+      "module_to": "M1",
+      "evidence": "pH-responsive release (Peng Fig.S5A)"
+    },
+    {
+      "source": "wsn",
+      "relation": "activates",
+      "target": "m2_ion",
+      "direction": "+",
+      "module_from": "M1",
+      "module_to": "M2",
+      "evidence": "Peng intro ref 30"
+    },
+    {
+      "source": "wsn",
+      "relation": "activates",
+      "target": "pb1f2",
+      "direction": "+",
+      "module_from": "M1",
+      "module_to": "M2",
+      "evidence": "ref 54 (Wang 2021)"
+    },
+    {
+      "source": "m2_ion",
+      "relation": "inhibits",
+      "target": "mavs",
+      "direction": "-",
+      "module_from": "M2",
+      "module_to": "M2",
+      "evidence": "ref 30 Yang 2019"
+    },
+    {
+      "source": "pb1f2",
+      "relation": "activates",
+      "target": "drp1",
+      "direction": "+",
+      "module_from": "M2",
+      "module_to": "M3",
+      "evidence": "ref 54 mitophagy"
+    },
+    {
+      "source": "wsn",
+      "relation": "activates",
+      "target": "eif2ak2",
+      "direction": "+",
+      "module_from": "M2",
+      "module_to": "M2",
+      "evidence": "Peng Discussion (PKR)"
+    },
+    {
+      "source": "eif2ak2",
+      "relation": "phosphorylates",
+      "target": "eif2a",
+      "direction": "+",
+      "module_from": "M2",
+      "module_to": "M2",
+      "evidence": "Peng Fig.3F (P-eIF2α)"
+    },
+    {
+      "source": "eif2ak3",
+      "relation": "phosphorylates",
+      "target": "eif2a",
+      "direction": "+",
+      "module_from": "M2",
+      "module_to": "M2",
+      "evidence": "Reactome R-HSA-381119"
+    },
+    {
+      "source": "eif2a",
+      "relation": "activates",
+      "target": "atf4",
+      "direction": "+",
+      "module_from": "M2",
+      "module_to": "M2",
+      "evidence": "Reactome R-HSA-381042"
+    },
+    {
+      "source": "atf4",
+      "relation": "activates",
+      "target": "ddit3",
+      "direction": "+",
+      "module_from": "M2",
+      "module_to": "M2",
+      "evidence": "Reactome R-HSA-381042"
+    },
+    {
+      "source": "atf6",
+      "relation": "activates",
+      "target": "xbp1",
+      "direction": "+",
+      "module_from": "M2",
+      "module_to": "M2",
+      "evidence": "Reactome R-HSA-381070"
+    },
+    {
+      "source": "eif2a",
+      "relation": "translocates",
+      "target": "crt",
+      "direction": "+",
+      "module_from": "M2",
+      "module_to": "M4",
+      "evidence": "Peng Fig.3H (CRT on membrane after ISR)"
+    },
+    {
+      "source": "drp1",
+      "relation": "activates",
+      "target": "ros",
+      "direction": "+",
+      "module_from": "M3",
+      "module_to": "M3",
+      "evidence": "Peng Fig.3B,G"
+    },
+    {
+      "source": "h2o2",
+      "relation": "activates",
+      "target": "ros",
+      "direction": "+",
+      "module_from": "M5",
+      "module_to": "M3",
+      "evidence": "Peng Fig.3B (ROS spike w/ LOD)"
+    },
+    {
+      "source": "ros",
+      "relation": "activates",
+      "target": "cycs",
+      "direction": "+",
+      "module_from": "M3",
+      "module_to": "M3",
+      "evidence": "KEGG hsa04210"
+    },
+    {
+      "source": "cycs",
+      "relation": "activates",
+      "target": "casp9",
+      "direction": "+",
+      "module_from": "M3",
+      "module_to": "M3",
+      "evidence": "Peng Fig.S14"
+    },
+    {
+      "source": "casp9",
+      "relation": "cleaves",
+      "target": "casp3",
+      "direction": "+",
+      "module_from": "M3",
+      "module_to": "M3",
+      "evidence": "Peng Fig.S14"
+    },
+    {
+      "source": "casp3",
+      "relation": "activates",
+      "target": "crt",
+      "direction": "+",
+      "module_from": "M3",
+      "module_to": "M4",
+      "evidence": "Krysko 2012; Obeid 2007"
+    },
+    {
+      "source": "ddit3",
+      "relation": "downregulates",
+      "target": "bcl2",
+      "direction": "-",
+      "module_from": "M2",
+      "module_to": "M3",
+      "evidence": "Reactome R-HSA-381042"
+    },
+    {
+      "source": "bcl2",
+      "relation": "inhibits",
+      "target": "bax",
+      "direction": "-",
+      "module_from": "M3",
+      "module_to": "M3",
+      "evidence": "KEGG hsa04210"
+    },
+    {
+      "source": "bax",
+      "relation": "activates",
+      "target": "cycs",
+      "direction": "+",
+      "module_from": "M3",
+      "module_to": "M3",
+      "evidence": "KEGG hsa04210"
+    },
+    {
+      "source": "drp1",
+      "relation": "activates",
+      "target": "tfam",
+      "direction": "-",
+      "module_from": "M3",
+      "module_to": "M3",
+      "evidence": "mito fragmentation context"
+    },
+    {
+      "source": "crt",
+      "relation": "binds",
+      "target": "cd91",
+      "direction": "+",
+      "module_from": "M4",
+      "module_to": "M6",
+      "evidence": "Peng intro; ref 36 Gardai 2003"
+    },
+    {
+      "source": "hmgb1",
+      "relation": "binds",
+      "target": "tlr4",
+      "direction": "+",
+      "module_from": "M4",
+      "module_to": "M6",
+      "evidence": "Peng Fig.1A (schematic)"
+    },
+    {
+      "source": "hmgb1",
+      "relation": "binds",
+      "target": "ager",
+      "direction": "+",
+      "module_from": "M4",
+      "module_to": "M6",
+      "evidence": "Krysko 2012"
+    },
+    {
+      "source": "atp_ex",
+      "relation": "binds",
+      "target": "p2rx7",
+      "direction": "+",
+      "module_from": "M4",
+      "module_to": "M6",
+      "evidence": "ref 38 Borges da Silva 2018"
+    },
+    {
+      "source": "casp3",
+      "relation": "activates",
+      "target": "atp_ex",
+      "direction": "+",
+      "module_from": "M3",
+      "module_to": "M4",
+      "evidence": "Galluzzi 2020"
+    },
+    {
+      "source": "hsp70",
+      "relation": "binds",
+      "target": "cd91",
+      "direction": "+",
+      "module_from": "M4",
+      "module_to": "M6",
+      "evidence": "Krysko 2012"
+    },
+    {
+      "source": "hsp90",
+      "relation": "binds",
+      "target": "cd91",
+      "direction": "+",
+      "module_from": "M4",
+      "module_to": "M6",
+      "evidence": "Krysko 2012"
+    },
+    {
+      "source": "type1_ifn",
+      "relation": "upregulates",
+      "target": "hla_a",
+      "direction": "+",
+      "module_from": "M4",
+      "module_to": "M7",
+      "evidence": "KEGG hsa04612"
+    },
+    {
+      "source": "ldha",
+      "relation": "produces",
+      "target": "lactate",
+      "direction": "+",
+      "module_from": "M5",
+      "module_to": "M5",
+      "evidence": "Warburg"
+    },
+    {
+      "source": "ldhb",
+      "relation": "consumes",
+      "target": "lactate",
+      "direction": "-",
+      "module_from": "M5",
+      "module_to": "M5",
+      "evidence": "HGNC:6541"
+    },
+    {
+      "source": "slc16a1",
+      "relation": "metabolizes",
+      "target": "lactate",
+      "direction": "+",
+      "module_from": "M5",
+      "module_to": "M5",
+      "evidence": "MCT1 export"
+    },
+    {
+      "source": "slc16a3",
+      "relation": "metabolizes",
+      "target": "lactate",
+      "direction": "+",
+      "module_from": "M5",
+      "module_to": "M5",
+      "evidence": "MCT4 export"
+    },
+    {
+      "source": "lod",
+      "relation": "consumes",
+      "target": "lactate",
+      "direction": "-",
+      "module_from": "M5",
+      "module_to": "M5",
+      "evidence": "Peng Fig.2A"
+    },
+    {
+      "source": "lod",
+      "relation": "produces",
+      "target": "h2o2",
+      "direction": "+",
+      "module_from": "M5",
+      "module_to": "M5",
+      "evidence": "Peng intro"
+    },
+    {
+      "source": "lactate",
+      "relation": "activates",
+      "target": "hif1a",
+      "direction": "+",
+      "module_from": "M5",
+      "module_to": "M5",
+      "evidence": "acidification → HIF stabilization"
+    },
+    {
+      "source": "hif1a",
+      "relation": "upregulates",
+      "target": "vegfa",
+      "direction": "+",
+      "module_from": "M5",
+      "module_to": "M5",
+      "evidence": "Reactome R-HSA-1234174"
+    },
+    {
+      "source": "hif1a",
+      "relation": "upregulates",
+      "target": "ldha",
+      "direction": "+",
+      "module_from": "M5",
+      "module_to": "M5",
+      "evidence": "KEGG hsa04066"
+    },
+    {
+      "source": "hif1a",
+      "relation": "upregulates",
+      "target": "slc16a3",
+      "direction": "+",
+      "module_from": "M5",
+      "module_to": "M5",
+      "evidence": "hypoxia response"
+    },
+    {
+      "source": "h2o2",
+      "relation": "activates",
+      "target": "nfe2l2",
+      "direction": "+",
+      "module_from": "M5",
+      "module_to": "M5",
+      "evidence": "NRF2 oxidative stress"
+    },
+    {
+      "source": "nfe2l2",
+      "relation": "inhibits",
+      "target": "ros",
+      "direction": "-",
+      "module_from": "M5",
+      "module_to": "M3",
+      "evidence": "antioxidant negative FB"
+    },
+    {
+      "source": "lactate",
+      "relation": "inhibits",
+      "target": "ifng",
+      "direction": "-",
+      "module_from": "M5",
+      "module_to": "M8",
+      "evidence": "TME immune suppression"
+    },
+    {
+      "source": "lactate",
+      "relation": "inhibits",
+      "target": "gzmb",
+      "direction": "-",
+      "module_from": "M5",
+      "module_to": "M8",
+      "evidence": "TME immune suppression"
+    },
+    {
+      "source": "cd91",
+      "relation": "matures",
+      "target": "cd11c",
+      "direction": "+",
+      "module_from": "M6",
+      "module_to": "M7",
+      "evidence": "Peng Fig.S17"
+    },
+    {
+      "source": "tlr4",
+      "relation": "activates",
+      "target": "il6",
+      "direction": "+",
+      "module_from": "M6",
+      "module_to": "M8",
+      "evidence": "Peng Fig.4E,5E"
+    },
+    {
+      "source": "tlr4",
+      "relation": "activates",
+      "target": "tnf",
+      "direction": "+",
+      "module_from": "M6",
+      "module_to": "M8",
+      "evidence": "Peng Fig.4G"
+    },
+    {
+      "source": "p2rx7",
+      "relation": "activates",
+      "target": "nlrp3",
+      "direction": "+",
+      "module_from": "M6",
+      "module_to": "M6",
+      "evidence": "Peng Discussion"
+    },
+    {
+      "source": "nlrp3",
+      "relation": "activates",
+      "target": "casp1",
+      "direction": "+",
+      "module_from": "M6",
+      "module_to": "M6",
+      "evidence": "KEGG hsa04621"
+    },
+    {
+      "source": "casp1",
+      "relation": "cleaves",
+      "target": "il1b",
+      "direction": "+",
+      "module_from": "M6",
+      "module_to": "M8",
+      "evidence": "KEGG hsa04621"
+    },
+    {
+      "source": "cd47",
+      "relation": "binds",
+      "target": "sirpa",
+      "direction": "+",
+      "module_from": "M6",
+      "module_to": "M6",
+      "evidence": "ref 7"
+    },
+    {
+      "source": "sirpa",
+      "relation": "inhibits",
+      "target": "cd11c",
+      "direction": "-",
+      "module_from": "M6",
+      "module_to": "M7",
+      "evidence": "\"don't eat me\""
+    },
+    {
+      "source": "cd11c",
+      "relation": "upregulates",
+      "target": "cd80",
+      "direction": "+",
+      "module_from": "M7",
+      "module_to": "M7",
+      "evidence": "Peng Fig.S17"
+    },
+    {
+      "source": "cd11c",
+      "relation": "upregulates",
+      "target": "cd83",
+      "direction": "+",
+      "module_from": "M7",
+      "module_to": "M7",
+      "evidence": "Peng Fig.S17"
+    },
+    {
+      "source": "cd11c",
+      "relation": "upregulates",
+      "target": "cd86",
+      "direction": "+",
+      "module_from": "M7",
+      "module_to": "M7",
+      "evidence": "Peng Fig.5M"
+    },
+    {
+      "source": "cd11c",
+      "relation": "upregulates",
+      "target": "ccr7",
+      "direction": "+",
+      "module_from": "M7",
+      "module_to": "M7",
+      "evidence": "LN homing"
+    },
+    {
+      "source": "cd11c",
+      "relation": "upregulates",
+      "target": "il12",
+      "direction": "+",
+      "module_from": "M7",
+      "module_to": "M8",
+      "evidence": "Peng Fig.3A"
+    },
+    {
+      "source": "hla_a",
+      "relation": "presents",
+      "target": "cd8a",
+      "direction": "+",
+      "module_from": "M7",
+      "module_to": "M8",
+      "evidence": "KEGG hsa04612"
+    },
+    {
+      "source": "hla_dr",
+      "relation": "presents",
+      "target": "cd4",
+      "direction": "+",
+      "module_from": "M7",
+      "module_to": "M8",
+      "evidence": "KEGG hsa04612"
+    },
+    {
+      "source": "cd80",
+      "relation": "activates",
+      "target": "cd8a",
+      "direction": "+",
+      "module_from": "M7",
+      "module_to": "M8",
+      "evidence": "co-stim"
+    },
+    {
+      "source": "cd86",
+      "relation": "activates",
+      "target": "cd8a",
+      "direction": "+",
+      "module_from": "M7",
+      "module_to": "M8",
+      "evidence": "co-stim"
+    },
+    {
+      "source": "il12",
+      "relation": "activates",
+      "target": "ifng",
+      "direction": "+",
+      "module_from": "M7",
+      "module_to": "M8",
+      "evidence": "Th1 polarization"
+    },
+    {
+      "source": "cd8a",
+      "relation": "produces",
+      "target": "ifng",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M8",
+      "evidence": "Peng Fig.4F"
+    },
+    {
+      "source": "cd8a",
+      "relation": "produces",
+      "target": "gzmb",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M8",
+      "evidence": "HGNC"
+    },
+    {
+      "source": "cd8a",
+      "relation": "produces",
+      "target": "prf1",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M8",
+      "evidence": "HGNC"
+    },
+    {
+      "source": "cd4",
+      "relation": "produces",
+      "target": "il6",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M8",
+      "evidence": "Peng Fig.4E"
+    },
+    {
+      "source": "trg_d",
+      "relation": "produces",
+      "target": "il17a",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M8",
+      "evidence": "Peng Fig.3A"
+    },
+    {
+      "source": "ifng",
+      "relation": "upregulates",
+      "target": "hla_a",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M7",
+      "evidence": "positive feedback"
+    },
+    {
+      "source": "ifng",
+      "relation": "upregulates",
+      "target": "pdl1",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M9",
+      "evidence": "IFN-γ induces PD-L1"
+    },
+    {
+      "source": "tnf",
+      "relation": "activates",
+      "target": "nos2",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M11",
+      "evidence": "M1 polarization"
+    },
+    {
+      "source": "pd1",
+      "relation": "inhibits",
+      "target": "cd8a",
+      "direction": "-",
+      "module_from": "M9",
+      "module_to": "M8",
+      "evidence": "ICB biology"
+    },
+    {
+      "source": "pdl1",
+      "relation": "binds",
+      "target": "pd1",
+      "direction": "+",
+      "module_from": "M9",
+      "module_to": "M9",
+      "evidence": "ICB biology"
+    },
+    {
+      "source": "ctla4",
+      "relation": "inhibits",
+      "target": "cd8a",
+      "direction": "-",
+      "module_from": "M9",
+      "module_to": "M8",
+      "evidence": "ICB biology"
+    },
+    {
+      "source": "apd1",
+      "relation": "inhibits",
+      "target": "pd1",
+      "direction": "-",
+      "module_from": "M9",
+      "module_to": "M9",
+      "evidence": "Peng Fig.5"
+    },
+    {
+      "source": "apd1",
+      "relation": "synergizes_with",
+      "target": "wsn",
+      "direction": "+",
+      "module_from": "M9",
+      "module_to": "M1",
+      "evidence": "Peng Fig.5G,H"
+    },
+    {
+      "source": "cd24",
+      "relation": "inhibits",
+      "target": "cd11c",
+      "direction": "-",
+      "module_from": "M6",
+      "module_to": "M7",
+      "evidence": "ref 55"
+    },
+    {
+      "source": "cd8a",
+      "relation": "upregulates",
+      "target": "cd44",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M10",
+      "evidence": "Peng Fig.S21"
+    },
+    {
+      "source": "cd8a",
+      "relation": "upregulates",
+      "target": "sell",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M10",
+      "evidence": "Peng Fig.S21"
+    },
+    {
+      "source": "cd8a",
+      "relation": "upregulates",
+      "target": "tcf7",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M10",
+      "evidence": "stemness memory"
+    },
+    {
+      "source": "foxp3",
+      "relation": "inhibits",
+      "target": "cd8a",
+      "direction": "-",
+      "module_from": "M10",
+      "module_to": "M8",
+      "evidence": "Treg suppression"
+    },
+    {
+      "source": "wsn",
+      "relation": "downregulates",
+      "target": "foxp3",
+      "direction": "-",
+      "module_from": "M1",
+      "module_to": "M10",
+      "evidence": "Peng Fig.5 (Treg↓)"
+    },
+    {
+      "source": "cd44",
+      "relation": "upregulates",
+      "target": "ifng",
+      "direction": "+",
+      "module_from": "M10",
+      "module_to": "M8",
+      "evidence": "recall response"
+    },
+    {
+      "source": "ifng",
+      "relation": "polarizes_to",
+      "target": "nos2",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M11",
+      "evidence": "M1 polarization"
+    },
+    {
+      "source": "wsn",
+      "relation": "polarizes_to",
+      "target": "nos2",
+      "direction": "+",
+      "module_from": "M1",
+      "module_to": "M11",
+      "evidence": "Peng Fig.5J (M1 CD80↑)"
+    },
+    {
+      "source": "il6",
+      "relation": "upregulates",
+      "target": "nos2",
+      "direction": "+",
+      "module_from": "M8",
+      "module_to": "M11",
+      "evidence": "M1 context"
+    },
+    {
+      "source": "mrc1",
+      "relation": "polarizes_to",
+      "target": "arg1",
+      "direction": "+",
+      "module_from": "M11",
+      "module_to": "M11",
+      "evidence": "M2 program"
+    },
+    {
+      "source": "wsn",
+      "relation": "downregulates",
+      "target": "mrc1",
+      "direction": "-",
+      "module_from": "M1",
+      "module_to": "M11",
+      "evidence": "Peng Fig.5J (M2↓)"
+    },
+    {
+      "source": "arg1",
+      "relation": "inhibits",
+      "target": "cd8a",
+      "direction": "-",
+      "module_from": "M11",
+      "module_to": "M8",
+      "evidence": "arginine depletion"
+    },
+    {
+      "source": "adgre1",
+      "relation": "upregulates",
+      "target": "cd80",
+      "direction": "+",
+      "module_from": "M11",
+      "module_to": "M11",
+      "evidence": "M1 marker co-expr"
+    },
+    {
+      "source": "caco3",
+      "relation": "protects",
+      "target": "wsn",
+      "direction": "+",
+      "module_from": "therapy",
+      "module_to": "M1",
+      "evidence": "Peng Fig.S11 (biosafety)"
+    },
+    {
+      "source": "caco3",
+      "relation": "protects",
+      "target": "lod",
+      "direction": "+",
+      "module_from": "therapy",
+      "module_to": "M5",
+      "evidence": "Peng Fig.S11"
+    },
+    {
+      "source": "apd1",
+      "relation": "synergizes_with",
+      "target": "crt",
+      "direction": "+",
+      "module_from": "therapy",
+      "module_to": "M4",
+      "evidence": "Peng Fig.5"
+    }
+  ]
+}

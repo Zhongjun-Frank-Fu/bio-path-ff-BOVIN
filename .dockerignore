@@ -1,0 +1,15 @@
+# 不要把大数据 / 本地虚拟环境 / 产物拷进 image
+.git
+.github
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+data/raw
+data/processed
+outputs
+mlruns
+lightning_logs
+notebooks/.ipynb_checkpoints
+.DS_Store

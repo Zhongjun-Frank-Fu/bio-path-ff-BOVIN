@@ -1,0 +1,6 @@
+# MD5 checksums for raw TCGA tsv (M2 · T2.1)
+# generated: 2026-04-20T19:07:37Z
+b36444f3ca1162d9f0936c0a0a583c26  HiSeqV2.gz
+5852188c16eebfd41c3513c845be5b67  HiSeqV2
+7cd66e7077f6ec6c5402f3798c946d24  COAD_clinicalMatrix
+ec58252d2d4e6eb82306fc82c435d869  COAD_survival.txt
