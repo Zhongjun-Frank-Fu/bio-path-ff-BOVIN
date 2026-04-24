@@ -43,6 +43,12 @@ class TrainingResult:
     num_test: int
     seed: int
     epochs_run: int
+    # A2-M4 fields (default to None so demo TCGA runs still serialize cleanly).
+    data_source: str | None = None
+    split_kind: str | None = None
+    holdout_cohort: str | None = None
+    # A2-M4.1 · RandomForest as a second flat-feature baseline alongside MLP.
+    rf_test_auc: float | None = None
 
     def to_json(self) -> dict[str, Any]:
         out = asdict(self)
@@ -101,6 +107,7 @@ def run_training(
     max_epochs_override: int | None = None,
     output_root: str | Path | None = None,
     raw_dir_override: str | Path | None = None,
+    holdout_cohort_override: str | None = None,
 ) -> TrainingResult:
     """Fit → validate → test → persist artifacts. Returns a summary.
 
@@ -121,8 +128,11 @@ def run_training(
 
     from bovin_demo.data import (
         icd_readiness_label,
+        leave_one_cohort_out,
         load_coad,
+        load_ici_pool,
         map_to_pathway_nodes,
+        recist_binary_label,
         stratified_split,
     )
     from bovin_demo.data.dataset import build_patient_dataset
@@ -146,25 +156,110 @@ def run_training(
     graph = load_graph()
     log.info("graph: %d nodes / %d edges", len(graph["nodes"]), len(graph["edges"]))
 
-    bundle = load_coad(raw_dir)
-    log.info("TCGA: %d samples × %d genes", bundle.n_samples, bundle.n_genes)
+    # --- Data source dispatch (A2-M4 T4.1) --------------------------------
+    data_cfg = cfg.get("data", {}) if "data" in cfg else {}
+    data_source = str(data_cfg.get("source", "tcga_coad_xena"))
+    cohort_ids: "pd.Series | None" = None  # populated only in ici_pool path
 
-    aligned, align_report = map_to_pathway_nodes(bundle.expr, graph)
-    log.info(
-        "alignment hit_rate=%.3f (%d/%d observable, %d misses)",
-        align_report.hit_rate, align_report.n_hits,
-        align_report.n_observable, len(align_report.misses),
-    )
+    if data_source == "ici_pool":
+        import pandas as pd  # local import; rest of file already uses np only
 
-    label, label_report = icd_readiness_label(bundle.expr)
-    log.info("label: pos_rate=%.3f thr=%.4f", label_report.pos_rate, label_report.threshold)
+        ici_cfg = data_cfg.get("ici", {})
+        # Allow the default cohorts list in ici_loader.TIER_A_COHORTS when config omits it.
+        cohorts_cfg = ici_cfg.get("cohorts", None)
+        pool_raw_dir = Path(raw_dir_override or ici_cfg.get("raw_dir", "data/raw_ici"))
+        aliases_csv = ici_cfg.get("aliases_csv",
+                                  "bovin_demo/data/static/bovin_gene_aliases.csv")
+        filter_tp = ici_cfg.get("filter_timepoint", "pre")
+        require_lbl = bool(ici_cfg.get("require_label", True))
+
+        pool_kwargs = dict(
+            raw_dir=pool_raw_dir,
+            aliases_csv=aliases_csv,
+            filter_timepoint=filter_tp,
+            require_label=require_lbl,
+        )
+        if cohorts_cfg is not None:
+            pool_kwargs["cohorts"] = list(cohorts_cfg)
+
+        pool = load_ici_pool(**pool_kwargs)
+        log.info("ICI pool: %d samples × %d genes · %d cohorts",
+                 pool.n_samples, len(pool.genes), len(pool.cohorts))
+        log.info("per-cohort hit rates: %s",
+                 {k: f"{v:.1%}" for k, v in pool.per_cohort_hit_rates.items()})
+
+        # pool.expr has HGNC symbols as columns; map_to_pathway_nodes converts
+        # those to graph node_ids (lowercase, e.g. "crt") that PatientGraphDataset
+        # expects. Missing nodes (e.g. type1_ifn from IFNA1/IFNB1 naming mismatch)
+        # become NaN columns → z_expr=0, observed_flag=0 in the dataset.
+        aligned, align_report = map_to_pathway_nodes(pool.expr, graph)
+        log.info("alignment hit_rate=%.3f (%d/%d observable, %d misses)",
+                 align_report.hit_rate, align_report.n_hits,
+                 align_report.n_observable, len(align_report.misses))
+
+        label, label_report = recist_binary_label(
+            pool.clinical,
+            response_col=str(cfg.label.get("response_col", "response_raw")),
+            mapping=cfg.label.get("mapping", None),
+        )
+        log.info("label: pos_rate=%.3f (mapping misses: %s)",
+                 label_report.pos_rate, label_report.genes_missing)
+
+        cohort_ids = pool.clinical["cohort_id"]
+
+    else:  # legacy demo path
+        bundle = load_coad(raw_dir)
+        log.info("TCGA: %d samples × %d genes", bundle.n_samples, bundle.n_genes)
+
+        aligned, align_report = map_to_pathway_nodes(bundle.expr, graph)
+        log.info(
+            "alignment hit_rate=%.3f (%d/%d observable, %d misses)",
+            align_report.hit_rate, align_report.n_hits,
+            align_report.n_observable, len(align_report.misses),
+        )
+
+        label, label_report = icd_readiness_label(bundle.expr)
+        log.info("label: pos_rate=%.3f thr=%.4f",
+                 label_report.pos_rate, label_report.threshold)
 
     common = aligned.index.intersection(label.index)
     aligned = aligned.loc[common]
     label = label.loc[common]
+    if cohort_ids is not None:
+        cohort_ids = cohort_ids.loc[common]
 
-    split = stratified_split(label, seed=seed)
-    log.info("split sizes: %s", split.sizes())
+    # --- Split dispatch (A2-M4 T4.2) --------------------------------------
+    split_cfg = cfg.get("split", {}) if "split" in cfg else {}
+    split_kind = str(split_cfg.get("kind", "stratified"))
+    # Passing holdout_cohort_override at call-time forces LOCO mode even if the
+    # config defaults to stratified — this is how the LOCO driver (tools/run_ici_loco.py)
+    # iterates folds without rewriting the config for each.
+    if holdout_cohort_override is not None:
+        split_kind = "loco"
+    holdout_cohort: str | None = None
+    if split_kind == "loco":
+        if cohort_ids is None:
+            raise ValueError("split.kind='loco' requires data.source='ici_pool'")
+        loco_cfg = split_cfg.get("loco", {})
+        holdout_cohort = (
+            holdout_cohort_override
+            or loco_cfg.get("holdout_cohort")
+        )
+        if holdout_cohort is None:
+            raise ValueError(
+                "LOCO mode needs split.loco.holdout_cohort set "
+                "(or pass --holdout-cohort)"
+            )
+        split = leave_one_cohort_out(
+            cohort_ids, label,
+            holdout_cohort=str(holdout_cohort),
+            val_frac=float(loco_cfg.get("val_frac", 0.15)),
+            seed=seed,
+        )
+        log.info("LOCO fold: holdout=%s  sizes=%s", holdout_cohort, split.sizes())
+    else:
+        split = stratified_split(label, seed=seed)
+        log.info("stratified split sizes: %s", split.sizes())
 
     dataset = build_patient_dataset(graph, aligned, label)
 
@@ -244,6 +339,11 @@ def run_training(
     )
     log.info("BaselineMLP test_auc = %.4f", baseline_auc)
 
+    rf_auc = _train_baseline_rf(
+        aligned=aligned, label=label, split=split, seed=seed,
+    )
+    log.info("BaselineRF  test_auc = %.4f", rf_auc)
+
     result = TrainingResult(
         run_dir=run_dir,
         best_val_auc=best_val,
@@ -255,6 +355,10 @@ def run_training(
         num_test=int(split.test_idx.size),
         seed=seed,
         epochs_run=int(trainer.current_epoch),
+        data_source=data_source,
+        split_kind=split_kind,
+        holdout_cohort=holdout_cohort,
+        rf_test_auc=float(rf_auc),
     )
     (run_dir / "metrics.json").write_text(
         json.dumps(result.to_json(), indent=2), encoding="utf-8"
@@ -338,3 +442,46 @@ def _train_baseline(
         if len(set(y_test.tolist())) > 1
         else 0.5
     )
+
+
+def _train_baseline_rf(
+    *,
+    aligned,
+    label,
+    split,
+    seed: int,
+) -> float:
+    """Second flat-feature baseline — RandomForest on the same 72-feature vector.
+
+    Purpose (plan §7 diagnostic): if RF ≈ MLP ≈ GNN on the same split, the
+    256-patient real-RECIST pool has a signal *ceiling* that neither
+    capacity nor graph structure can cross. Untuned defaults are intentional —
+    this is a reference point, not a tuned competitor.
+    """
+    import numpy as np
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.metrics import roc_auc_score
+
+    X = aligned.fillna(0.0).to_numpy()
+    y = label.to_numpy()
+
+    X_train, y_train = X[split.train_idx], y[split.train_idx]
+    X_test,  y_test  = X[split.test_idx],  y[split.test_idx]
+
+    mu, sd = X_train.mean(axis=0), X_train.std(axis=0) + 1e-6
+    X_train = (X_train - mu) / sd
+    X_test  = (X_test  - mu) / sd
+
+    clf = RandomForestClassifier(
+        n_estimators=200,
+        max_depth=None,
+        min_samples_leaf=2,
+        class_weight="balanced",
+        random_state=seed,
+        n_jobs=-1,
+    )
+    clf.fit(X_train, y_train)
+    probs = clf.predict_proba(X_test)[:, 1]
+    if len(set(y_test.tolist())) < 2:
+        return 0.5
+    return float(roc_auc_score(y_test, probs))

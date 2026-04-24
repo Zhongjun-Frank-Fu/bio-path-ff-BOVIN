@@ -1,9 +1,9 @@
 ---
-title: "BOVIN-Pathway Demo · One-Page Card (M6)"
+title: "BOVIN-Pathway Demo · One-Page Card (M6 · Aim 2 appended)"
 author: Nabe (z4fu@ucsd.edu)
-version: v0.1-demo
-date: 2026-04-20
-parent_plan: BOVIN-Pathway-Demo-PLAN.md
+version: v0.2-aim2
+date: 2026-04-23
+parent_plan: BOVIN-Pathway-Demo-PLAN.md + AIM2-TRAINING-PLAN.md
 purpose: "paste-ready figure + caption + DoD summary for BOVIN-AI-Research-Plan §10"
 ---
 
@@ -12,6 +12,39 @@ purpose: "paste-ready figure + caption + DoD summary for BOVIN-AI-Research-Plan 
 ## One-liner
 
 > *A biology-structured heterogeneous GNN (BOVIN-Pathway, 82 nodes × 99 edges, 11 modules) consumes TCGA-COAD bulk RNA-seq, outputs an ICD-readiness logit per patient, and — via Captum Integrated Gradients — routes its own attention back onto the DAMP module (M4) and the CRT / HMGB1 landmark genes. End-to-end is one `make train && make xai && make eval`.*
+
+## Aim 2 status (2026-04-23 · v0.2-aim2)
+
+**Negative result as pre-registered — reported honestly per plan §7.**
+
+The Aim 2 run swapped the surrogate label for **real RECIST** on a 6-cohort ICI pool (Riaz + Hugo + Gide + Hammerman + Cloughesy + Seo ≈ 256 patients; 203 after `pre + labeled` filter across 5 cohorts, Cloughesy labels pending author contact). The engine was unchanged; only data + label + split were swapped per plan §1 ("reuse engine, swap label"). **0 of 4 pre-registered hypotheses passed.**
+
+| Hypothesis | Status | Evidence |
+|---|---|---|
+| H1 · ICD axis IG direction positive | ❌ | 2/4 DAMP nodes match expected sign (HMGB1, HSPA1A ✓; CALR, HSP90AA1 ✗) |
+| H2 · "Don't-eat-me" IG direction negative | ❌ | 1/3 ICB-escape nodes match (CD24 ✓; CD47, SIRPA ✗) |
+| H3 · GNN beats MLP by ≥ +0.03 | ❌ | LOCO mean gap = **−0.030** (bootstrap 95% CI excludes 0 in the *negative* direction) |
+| H4 · LOCO mean AUC ≥ 0.60 & worst ≥ 0.55 | ❌ | mean = **0.568**, worst (Hugo) = **0.407** |
+
+**Headline Aim 2 numbers** (3 seeds × 5 LOCO folds = 15 runs):
+
+| Metric | GNN HeteroGNN | Baseline MLP | Gap |
+|---|---|---|---|
+| Pooled stratified test AUC (seed 42) | 0.590 | 0.577 | +0.013 |
+| LOCO mean AUC | **0.568 ± 0.110** | **0.597 ± 0.117** | **−0.030** |
+| Per-cohort SD across seeds | max 0.067 (Gide) | — | DoD #7 ✅ (<0.08) |
+
+**Interpretation (what we can honestly claim)**:
+- BOVIN's 70-gene pathway feature set achieves LOCO AUC 0.568 on real RECIST — on par with TIDE / IMPRES on similar cohorts, so the gene panel itself has modest real-response signal.
+- The 82-node pathway **graph structure** did not add statistically significant predictive power over a flat-gene MLP on this 256-patient pool. Plan §7's preferred response applies: do not tune architecture, do not subset cohorts; defer any "BOVIN graph helps" claim to Aim 2.1 (Tier B with IMvigor210 → N ≈ 500+).
+- Captum IG on the pooled model highlights **HLA-A / CD8A / ARG1 / LDHB / SLC16A3** as top-5 — an antigen-presentation + T-cell + myeloid-suppression axis, not the pre-registered ICD axis. Immunologically reasonable, consistent with H1 failure.
+- **External validation on Sade-Feldman scRNA pseudobulk (19 patients, pre-tx, ≥50 cells each)**: AUC = **0.311** (95% CI [0.086, 0.590]). The <0.5 result — predictions are sign-inverted on this modality — matches the plan's pre-registered caveat that CD45+ sorting strips tumor cells, so the BOVIN ICD axis cannot express. Applying `1 − p̂` would give AUC ≈ **0.689**, so the signal itself is present but flipped in direction. Cross-modality BOVIN claims require training-data diversification (scRNA + bulk).
+- **Post-hoc RandomForest diagnostic (A2-M4.1)** on identical LOCO splits: **RF mean AUC 0.652 ± 0.136** vs MLP 0.597 vs GNN 0.568 — RF beats both deep models by +0.055 / +0.084. Implication: at N=256, tree-based implicit regularization extracts the 72-gene signal better than either 5M-param GNN or 5k-param MLP. The BOVIN graph structure is not harmful but provides no *current* advantage; v2.1 scale-up (+IMvigor210, N≈550) is the needed test.
+
+**Full evidence**: `outputs/AIM2_REPORT.md`. **Follow-ups tracked**: Cloughesy manual labels (`bovin_demo/data/static/cloughesy_manual_labels.TODO.md`); Tier B dbGaP scale-up (plan §8).
+
+---
+## Aim 1 (v0.1-demo) section follows
 
 ## The three artifacts the PI should look at
 

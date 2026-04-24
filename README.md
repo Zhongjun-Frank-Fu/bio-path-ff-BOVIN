@@ -1,11 +1,13 @@
-# BOVIN-Pathway Demo · Aim 1 Minimum Closed Loop
+# BOVIN-Pathway Demo · Aim 1 Minimum Closed Loop + Aim 2 Real-ICI Pool
 
-> Biology-structured HeteroGNN that consumes TCGA-COAD bulk RNA-seq
-> aligned to the **BOVIN-Pathway graph (82 nodes / 99 edges, 11 modules)**
-> and produces an **ICD-readiness** score + module-level **Integrated-Gradients** attributions.
+> Biology-structured HeteroGNN that consumes either TCGA-COAD bulk RNA-seq
+> or a 6-cohort real-ICI pool aligned to the **BOVIN-Pathway graph (82 nodes
+> / 99 edges, 11 modules)** and produces an ICD-readiness (Aim 1) or RECIST
+> response (Aim 2) logit + module-level **Integrated-Gradients** attributions.
 >
-> Status: **M6 · Report + Reproducibility complete (v0.1-demo).** All six milestones (graph · data · model · training · XAI · report) land; the full path is one `make data-coad && make train && make xai && make eval`.
-> See [BOVIN-Pathway-Demo-PLAN.md](../BOVIN-Pathway-Demo-PLAN.md) for the full plan, DoD, and risk register.
+> Status:
+> - **v0.1-demo** · M0 → M6 on TCGA-COAD surrogate (val_auc ≈ 0.97, gap vs MLP +0.034). Plan: [BOVIN-Pathway-Demo-PLAN.md](../BOVIN-Pathway-Demo-PLAN.md).
+> - **v0.2-aim2** · A2-M1 → A2-M7 on 6-cohort real RECIST pool (203 patients, LOCO mean AUC **0.568 ± 0.110**, GNN-MLP gap **−0.030**, **0/4 pre-registered hypotheses pass**). Negative result reported honestly per plan §7. Full evidence: [`outputs/AIM2_REPORT.md`](outputs/AIM2_REPORT.md). Plan: [AIM2-TRAINING-PLAN.md](AIM2-TRAINING-PLAN.md).
 
 ---
 
@@ -43,6 +45,27 @@ make train             # python -m bovin_demo.cli train --config configs/tcga_co
 ```
 
 Apple Silicon users: the Makefile defaults to `--platform=linux/amd64`.
+
+### 3. Aim 2 — real-ICI pool quickstart (v0.2-aim2)
+
+```bash
+# inside the Docker container:
+bash tools/download_ici_pool.sh                          # 6 cohorts (~173 MB) + SHA256
+python tools/build_bovin_gene_aliases.py                 # one-off: 72 BOVIN symbols → Entrez/Ensembl
+python -m bovin_demo.cli train --config configs/ici_pool.yaml   # stratified seed 42 (~5 min)
+python tools/run_ici_loco.py --seeds 42 1337 2024        # 3-seed × 5-fold LOCO (~75 min)
+python tools/merge_loco_summaries.py outputs/<date>_loco_summary.json ...  # aggregate to 3-seed merged
+python -m bovin_demo.eval.hypothesis_tests \
+    --run-dir outputs/<stratified_dir> \
+    --loco-merged outputs/loco_3seed_merged.json          # evaluate H1-H4
+python -m bovin_demo.eval.aim2_report \
+    --stratified-run outputs/<stratified_dir> \
+    --loco-merged    outputs/loco_3seed_merged.json       # write outputs/AIM2_REPORT.md
+```
+
+Expected result (per plan §3.1 DoD): all 4 pre-registered hypotheses fail on the current 5-cohort labeled pool — the pipeline runs cleanly, the numbers are stable across seeds, but the graph structure + 256-patient pool is insufficient to show the claimed GNN-vs-MLP advantage. See `outputs/AIM2_REPORT.md`.
+
+Cloughesy labels (29 patients) are pending author contact — fill `bovin_demo/data/static/cloughesy_manual_labels.csv` and everything re-runs unchanged.
 
 ---
 

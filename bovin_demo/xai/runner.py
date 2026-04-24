@@ -53,18 +53,17 @@ def run_xai(
     seed: int = 42,
     top_n_patients: int = 20,
     n_steps: int = 20,
+    holdout_cohort_override: str | None = None,
 ) -> dict:
-    """Orchestrate the full M5 pipeline against the ckpt produced by M4."""
+    """Orchestrate the full M5 pipeline against the ckpt produced by M4.
+
+    Works for both ``data.source=tcga_coad_xena`` and ``data.source=ici_pool``
+    via the shared :func:`bovin_demo.data.build.build_data_and_split` helper.
+    """
     from torch_geometric.loader import DataLoader as PyGDataLoader
 
-    from bovin_demo.data import (
-        icd_readiness_label,
-        load_coad,
-        map_to_pathway_nodes,
-        stratified_split,
-    )
+    from bovin_demo.data.build import build_data_and_split
     from bovin_demo.data.dataset import build_patient_dataset
-    from bovin_demo.graph import load_graph
     from bovin_demo.model import build_classifier
     from bovin_demo.train.loop import _load_config
     from bovin_demo.xai.aggregate import (
@@ -77,15 +76,13 @@ def run_xai(
 
     run_dir = Path(run_dir)
     cfg = _load_config(config_path)
-    raw_dir = Path(raw_dir_override or cfg.paths.get("raw_dir", "data/raw"))
-
-    graph = load_graph()
-    bundle = load_coad(raw_dir)
-    aligned, _ = map_to_pathway_nodes(bundle.expr, graph)
-    label, _ = icd_readiness_label(bundle.expr)
-    common = aligned.index.intersection(label.index)
-    aligned, label = aligned.loc[common], label.loc[common]
-    split = stratified_split(label, seed=seed)
+    prep = build_data_and_split(
+        cfg, seed=seed,
+        raw_dir_override=raw_dir_override,
+        holdout_cohort_override=holdout_cohort_override,
+    )
+    graph = prep.graph
+    aligned, label, split = prep.aligned, prep.label, prep.split
 
     dataset = build_patient_dataset(graph, aligned, label)
     val_samples = [dataset[int(i)] for i in split.val_idx]

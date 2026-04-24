@@ -1,0 +1,30 @@
+patient_id,arm,os_months,pfs_months,response_raw,ici_response,source_note
+Pt2,neoadj,,,,,TODO M2.1 — not in GEO or paper supplement
+Pt3,adjuvant,,,,,TODO M2.1
+Pt4,adjuvant,,,,,TODO M2.1
+Pt5,adjuvant,,,,,TODO M2.1
+Pt6,adjuvant,,,,,TODO M2.1
+Pt8,adjuvant,,,,,TODO M2.1
+Pt10,neoadj,,,,,TODO M2.1
+Pt11,neoadj,,,,,TODO M2.1
+Pt12,adjuvant,,,,,TODO M2.1
+Pt14,neoadj,,,,,TODO M2.1
+Pt15,neoadj,,,,,TODO M2.1
+Pt16,adjuvant,,,,,TODO M2.1
+Pt17,neoadj,,,,,TODO M2.1
+Pt19,adjuvant,,,,,TODO M2.1
+Pt20,neoadj,,,,,TODO M2.1
+Pt21,neoadj,,,,,TODO M2.1
+Pt22,neoadj,,,,,TODO M2.1
+Pt23,adjuvant,,,,,TODO M2.1
+Pt24,neoadj,,,,,TODO M2.1
+Pt25,adjuvant,,,,,TODO M2.1
+Pt26,adjuvant,,,,,TODO M2.1
+Pt27,adjuvant,,,,,TODO M2.1
+Pt28,adjuvant,,,,,TODO M2.1
+Pt29,neoadj,,,,,TODO M2.1
+Pt30,neoadj,,,,,TODO M2.1
+Pt31,neoadj,,,,,TODO M2.1
+Pt33,adjuvant,,,,,TODO M2.1
+Pt34,neoadj,,,,,TODO M2.1
+Pt35,neoadj,,,,,TODO M2.1

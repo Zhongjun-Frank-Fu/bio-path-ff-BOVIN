@@ -11,6 +11,7 @@ from bovin_demo.data import (
     icd_readiness_signature,
     load_coad,
     map_to_pathway_nodes,
+    leave_one_cohort_out,
     stratified_split,
 )
 
@@ -134,3 +135,71 @@ def test_stratified_split_rejects_bad_ratios():
     y = pd.Series([0, 1] * 20)
     with pytest.raises(ValueError, match="sum to 1.0"):
         stratified_split(y, ratios=(0.5, 0.3, 0.3))
+
+
+# ----------------------------- A2-T3.2 -----------------------------------
+# Leave-one-cohort-out tests — pure logic, no raw-data dependency.
+
+def _loco_fixture(seed=0):
+    """Build a 100-sample toy dataset across 4 cohorts with ~50% labels."""
+    rng = np.random.default_rng(seed)
+    cohorts = np.array(["A"] * 30 + ["B"] * 25 + ["C"] * 25 + ["D"] * 20)
+    labels = pd.Series(rng.integers(0, 2, size=100).astype(float))
+    # drop ~10% labels to unlabeled, stay above 5-min threshold per fold
+    unlabeled = rng.choice(100, size=10, replace=False)
+    labels.iloc[unlabeled] = np.nan
+    return pd.Series(cohorts), labels
+
+
+def test_loco_test_fold_equals_holdout_cohort():
+    cohorts, labels = _loco_fixture()
+    split = leave_one_cohort_out(cohorts, labels, holdout_cohort="B")
+    assert (cohorts.iloc[split.test_idx] == "B").all()
+    # all non-B samples in train ∪ val
+    non_b = np.where(cohorts.to_numpy() != "B")[0]
+    combined = np.sort(np.concatenate([split.train_idx, split.val_idx]))
+    np.testing.assert_array_equal(combined, non_b)
+
+
+def test_loco_val_fraction_and_stratified():
+    cohorts, labels = _loco_fixture()
+    split = leave_one_cohort_out(cohorts, labels, holdout_cohort="D",
+                                  val_frac=0.2, seed=42)
+    # All val samples are labeled (unlabeled go to train).
+    assert labels.iloc[split.val_idx].notna().all()
+    # ~20% of labeled non-holdout
+    n_labeled_rest = labels.loc[cohorts != "D"].notna().sum()
+    assert abs(split.val_idx.size / n_labeled_rest - 0.20) < 0.05
+
+
+def test_loco_disjoint_union_covers_all_samples():
+    cohorts, labels = _loco_fixture()
+    split = leave_one_cohort_out(cohorts, labels, holdout_cohort="C")
+    union = np.concatenate([split.train_idx, split.val_idx, split.test_idx])
+    assert union.size == len(cohorts)
+    assert np.unique(union).size == len(cohorts)
+
+
+def test_loco_seed_stable():
+    cohorts, labels = _loco_fixture()
+    a = leave_one_cohort_out(cohorts, labels, holdout_cohort="A", seed=42)
+    b = leave_one_cohort_out(cohorts, labels, holdout_cohort="A", seed=42)
+    np.testing.assert_array_equal(a.train_idx, b.train_idx)
+    np.testing.assert_array_equal(a.val_idx,   b.val_idx)
+
+
+def test_loco_rejects_unknown_cohort():
+    cohorts, labels = _loco_fixture()
+    with pytest.raises(ValueError, match="not in cohort_ids"):
+        leave_one_cohort_out(cohorts, labels, holdout_cohort="Z")
+
+
+def test_loco_unlabeled_samples_go_to_train():
+    cohorts, labels = _loco_fixture()
+    split = leave_one_cohort_out(cohorts, labels, holdout_cohort="A")
+    # NaN labels in non-holdout cohorts should appear in train, not val.
+    non_holdout_unlabeled = np.where(
+        (cohorts.to_numpy() != "A") & labels.isna().to_numpy()
+    )[0]
+    assert np.isin(non_holdout_unlabeled, split.train_idx).all()
+    assert not np.isin(non_holdout_unlabeled, split.val_idx).any()

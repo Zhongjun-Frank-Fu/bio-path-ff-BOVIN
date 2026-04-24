@@ -1,0 +1,71 @@
+# ============================================================================
+# BOVIN-Pathway · Aim 2 · configs/ici_pool.yaml
+# Tier A ICI pool (6 cohorts · real RECIST labels · LOCO eval)
+#
+# 继承 default.yaml；覆盖的只有 data/label/eval 三段，其它（model/train/xai）
+# 继续复用 demo。这个文件就是 plan §1 "Reuse engine, swap label" 的直接体现。
+#
+# 使用：
+#     python -m bovin_demo.cli train --config configs/ici_pool.yaml
+#     python -m bovin_demo.cli train --config configs/ici_pool.yaml \
+#         ++split.kind=loco ++split.holdout_cohort=gide_prjeb23709
+# ============================================================================
+
+defaults:
+  - default
+
+data:
+  source: ici_pool
+  ici:
+    raw_dir: data/raw_ici
+    aliases_csv: bovin_demo/data/static/bovin_gene_aliases.csv
+    cohorts:
+      - riaz_gse91061
+      - hugo_gse78220
+      - gide_prjeb23709
+      - hammerman_gse165278
+      - cloughesy_gse121810
+      - seo_gse165252
+    filter_timepoint: pre        # drop on-treatment samples (§2.4 of plan)
+    require_label: true          # drop rows with NaN ici_response
+    # per-cohort z-score is applied automatically inside load_ici_pool (§2.3).
+
+label:
+  # A2-M2 primary label · RECIST binary (plan §2.2) — replaces the demo's
+  # icd_readiness_label surrogate.
+  kind: recist_binary
+  response_col: response_raw     # canonical column name emitted by ici_loader
+  # override the default mapping if/when a config wants to (e.g., count SD=1).
+  mapping: null
+  rationale: >
+    Real RECIST (CR/PR→1, SD/PD→0) on 6-cohort pooled ICI. Bypasses the
+    "label is a function of genes" objection that limits demo's 0.966 AUC.
+
+split:
+  # Two modes; the trainer dispatches on split.kind.
+  kind: stratified              # one of {stratified, loco}
+  stratified:
+    train: 0.6
+    val:   0.2
+    test:  0.2
+  loco:
+    # When kind=loco, the trainer should iterate over holdout_cohort in the
+    # "cohorts" list and aggregate 6-fold metrics. For a single-fold run
+    # override ++split.loco.holdout_cohort=<cohort_id> on the CLI.
+    holdout_cohort: null
+    val_frac: 0.15
+
+train:
+  # Keep demo's optimizer/loss; tweak lr slightly for the smaller pool.
+  lr: 1.5e-3
+  max_epochs: 120               # more epochs — pool is smaller than COAD, more prone to underfit
+  patience: 25
+  class_weight: balanced         # Hammerman/Riaz have low pos_rate — don't starve the positives
+
+eval:
+  # Aim 2 adds LOCO-transfer + external Sade-Feldman panels on top of demo eval.
+  bootstrap: 1000                # tighter CI than demo's 500 for report.md headline numbers
+  per_cohort_auc: true           # extra metric (plan §6.2) — per-holdout AUC for LOCO
+  external:
+    # Forward pass on Sade-Feldman pseudobulk after train (A2-M5); null = skip.
+    sade_feldman_raw_dir: null

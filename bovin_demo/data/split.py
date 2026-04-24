@@ -1,4 +1,9 @@
-"""M2 · T2.5 — stratified 60/20/20 train/val/test split with fixed seed."""
+"""M2 · T2.5 — stratified 60/20/20 train/val/test split with fixed seed.
+
+A2-M3 · T3.2 — :func:`leave_one_cohort_out` added for Aim 2 LOCO evaluation
+(plan §2.4). Existing :func:`stratified_split` is unchanged so the demo
+pipeline keeps working.
+"""
 
 from __future__ import annotations
 
@@ -85,3 +90,97 @@ def stratified_split(
     assert union.size == n
     assert np.unique(union).size == n
     return split
+
+
+def leave_one_cohort_out(
+    cohort_ids: pd.Series | np.ndarray,
+    labels: pd.Series | np.ndarray,
+    *,
+    holdout_cohort: str,
+    val_frac: float = 0.15,
+    seed: int = 42,
+) -> Split:
+    """LOCO split — one cohort → test, others → train (with carve-out val).
+
+    Parameters
+    ----------
+    cohort_ids : Series or array of shape (n,)
+        Cohort ID per sample (e.g., ``"riaz_gse91061"``). Order must match
+        ``labels``.
+    labels : Series or array of shape (n,)
+        Binary labels. Values can be NaN / pd.NA — those samples are **dropped
+        from val stratification** but kept in the fold they belong to
+        (unlabeled non-holdout samples go to train; unlabeled holdout samples
+        still go to test).
+    holdout_cohort : str
+        Which ``cohort_ids`` value to use as the test fold. Raises if absent.
+    val_frac : float, default 0.15
+        Fraction of **labeled** training samples to carve out for early-stop
+        validation. Stratified by label.
+    seed : int, default 42
+        sklearn random_state.
+
+    Returns
+    -------
+    Split
+        ``test_idx`` = all samples with ``cohort_ids == holdout_cohort``.
+        ``train_idx + val_idx`` = all other samples. ``val_idx`` is a
+        label-stratified ``val_frac`` carve-out of the labeled non-holdout
+        samples; unlabeled non-holdout samples go to ``train_idx``.
+
+    Raises
+    ------
+    ValueError
+        If ``holdout_cohort`` is not present in ``cohort_ids``,
+        ``len(cohort_ids) != len(labels)``, or fewer than 5 labeled
+        non-holdout samples remain for the val carve-out.
+
+    Notes
+    -----
+    Plan §2.4 — this replaces the demo's stratified_split as the primary
+    Aim 2 eval protocol. Each of the 6 Tier A cohorts becomes a fold once,
+    giving the 6-fold LOCO AUC reported in `eval/loco_transfer.py`.
+    """
+    cohort_ids = pd.Series(cohort_ids).reset_index(drop=True)
+    labels     = pd.Series(labels).reset_index(drop=True)
+    if len(cohort_ids) != len(labels):
+        raise ValueError(
+            f"cohort_ids ({len(cohort_ids)}) / labels ({len(labels)}) length mismatch"
+        )
+    if holdout_cohort not in cohort_ids.values:
+        raise ValueError(
+            f"holdout_cohort {holdout_cohort!r} not in cohort_ids "
+            f"(known: {sorted(cohort_ids.unique().tolist())})"
+        )
+
+    n = len(cohort_ids)
+    all_idx = np.arange(n)
+    test_mask = (cohort_ids == holdout_cohort).to_numpy()
+    idx_test = all_idx[test_mask]
+    idx_rest = all_idx[~test_mask]
+
+    labeled_mask = labels.loc[idx_rest].notna().to_numpy()
+    labeled_rest  = idx_rest[labeled_mask]
+    unlabeled_rest = idx_rest[~labeled_mask]
+
+    if len(labeled_rest) < 5:
+        raise ValueError(
+            f"only {len(labeled_rest)} labeled non-holdout samples — "
+            "cannot carve a val fold"
+        )
+
+    y_for_strat = labels.loc[labeled_rest].astype(float).to_numpy()
+    idx_train_labeled, idx_val = train_test_split(
+        labeled_rest,
+        test_size=val_frac,
+        stratify=y_for_strat,
+        random_state=seed,
+    )
+    idx_train = np.sort(np.concatenate([idx_train_labeled, unlabeled_rest]))
+    idx_val   = np.sort(idx_val)
+    idx_test  = np.sort(idx_test)
+
+    union = np.concatenate([idx_train, idx_val, idx_test])
+    assert union.size == n
+    assert np.unique(union).size == n
+    return Split(train_idx=idx_train, val_idx=idx_val, test_idx=idx_test)
